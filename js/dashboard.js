@@ -1,8 +1,8 @@
 // ==========================================
-// DASHBOARD.JS - FULLY FIXED VERSION
+// DASHBOARD.JS - WITH REAL DATA CALCULATIONS
 // ==========================================
 
-// Sample Employee Data (same as employees.js)
+// Employee Data (matches employees.js)
 let employees = [
     {
         id: 'EMP001',
@@ -96,13 +96,104 @@ let employees = [
     }
 ];
 
+// Departments list
+const departments = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance'];
+
 // Initialize Dashboard
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Dashboard loaded!');
+    calculateAndDisplayStats();
     loadRecentEmployees();
+    loadDepartmentOverview();
     setupModalCloseButtons();
     setupEditForm();
 });
+
+// Calculate and Display Real Statistics
+function calculateAndDisplayStats() {
+    // Total Employees
+    const totalEmployees = employees.length;
+    document.getElementById('totalEmployees').textContent = totalEmployees;
+
+    // Total Departments
+    const uniqueDepartments = [...new Set(employees.map(emp => emp.department))].length;
+    document.getElementById('totalDepartments').textContent = uniqueDepartments;
+
+    // Present Today (Active employees)
+    const presentToday = employees.filter(emp => emp.status === 'active').length;
+    document.getElementById('presentToday').textContent = presentToday;
+
+    // On Leave
+    const onLeave = employees.filter(emp => emp.status === 'on-leave').length;
+    document.getElementById('onLeave').textContent = onLeave;
+
+    // Calculate Attendance Rate
+    const attendanceRate = totalEmployees > 0 ? ((presentToday / totalEmployees) * 100).toFixed(1) : 0;
+    document.getElementById('attendanceRate').innerHTML = `
+        <i class="fas fa-arrow-up"></i>
+        <span>${attendanceRate}% attendance</span>
+    `;
+
+    // Calculate Leave Percentage
+    const leavePercentage = totalEmployees > 0 ? ((onLeave / totalEmployees) * 100).toFixed(1) : 0;
+    document.getElementById('leavePercentage').innerHTML = `
+        <i class="fas fa-minus"></i>
+        <span>${leavePercentage}% on leave</span>
+    `;
+
+    console.log('Statistics calculated:', {
+        totalEmployees,
+        uniqueDepartments,
+        presentToday,
+        onLeave,
+        attendanceRate,
+        leavePercentage
+    });
+}
+
+// Load Department Overview with REAL employee counts
+function loadDepartmentOverview() {
+    const container = document.getElementById('departmentOverview');
+    if (!container) {
+        console.error('Department overview container not found!');
+        return;
+    }
+
+    const departmentIcons = {
+        'Engineering': 'fa-code',
+        'Marketing': 'fa-bullhorn',
+        'Sales': 'fa-chart-line',
+        'HR': 'fa-users',
+        'Finance': 'fa-dollar-sign'
+    };
+
+    // Calculate employee count for each department
+    const departmentStats = departments.map(dept => {
+        const count = employees.filter(emp => emp.department === dept).length;
+        return {
+            name: dept,
+            count: count,
+            icon: departmentIcons[dept] || 'fa-building'
+        };
+    }).filter(dept => dept.count > 0); // Only show departments with employees
+
+    container.innerHTML = departmentStats.map(dept => `
+        <div class="dept-stat">
+            <div class="dept-info">
+                <div class="dept-icon">
+                    <i class="fas ${dept.icon}"></i>
+                </div>
+                <div>
+                    <div class="dept-name">${dept.name}</div>
+                    <div class="dept-count">${dept.count} employee${dept.count !== 1 ? 's' : ''}</div>
+                </div>
+            </div>
+            <div class="dept-number">${dept.count}</div>
+        </div>
+    `).join('');
+
+    console.log('Department overview loaded with real counts:', departmentStats);
+}
 
 // Setup Modal Close Buttons
 function setupModalCloseButtons() {
@@ -182,7 +273,7 @@ function loadRecentEmployees() {
     console.log('Recent employees loaded!');
 }
 
-// View Employee from Dashboard - FIXED
+// View Employee from Dashboard
 function viewEmployeeFromDashboard(id) {
     console.log('Viewing employee from dashboard:', id);
     const employee = employees.find(emp => emp.id === id);
@@ -217,7 +308,7 @@ function viewEmployeeFromDashboard(id) {
     console.log('View modal opened successfully!');
 }
 
-// Edit Employee from Dashboard - FIXED
+// Edit Employee from Dashboard
 function editEmployeeFromDashboard(id) {
     console.log('Editing employee from dashboard:', id);
     const employee = employees.find(emp => emp.id === id);
@@ -294,8 +385,10 @@ function updateEmployeeFromDashboard() {
     // Close modal
     document.getElementById('editEmployeeModal').style.display = 'none';
     
-    // Reload table
+    // Reload all data
+    calculateAndDisplayStats();
     loadRecentEmployees();
+    loadDepartmentOverview();
     
     // Success message
     alert('✅ Employee updated successfully!');
@@ -311,4 +404,4 @@ function formatDate(dateString) {
 window.viewEmployeeFromDashboard = viewEmployeeFromDashboard;
 window.editEmployeeFromDashboard = editEmployeeFromDashboard;
 
-console.log('dashboard.js loaded successfully!');
+console.log('dashboard.js loaded successfully with real data calculations!');
