@@ -1,9 +1,9 @@
 // ==========================================
-// DASHBOARD.JS - WITH REAL DATA CALCULATIONS
+// DASHBOARD.JS - WITH LOCALSTORAGE SUPPORT
 // ==========================================
 
-// Employee Data (matches employees.js)
-let employees = [
+// Load employees from localStorage or use default data
+let employees = JSON.parse(localStorage.getItem('companyEmployees')) || [
     {
         id: 'EMP001',
         name: 'John Doe',
@@ -99,9 +99,19 @@ let employees = [
 // Departments list
 const departments = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance'];
 
+// Save to localStorage
+function saveToLocalStorage() {
+    localStorage.setItem('companyEmployees', JSON.stringify(employees));
+    console.log('Dashboard - Employees saved to localStorage');
+}
+
 // Initialize Dashboard
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Dashboard loaded!');
+    // If no data in localStorage, save default data
+    if (!localStorage.getItem('companyEmployees')) {
+        saveToLocalStorage();
+    }
     calculateAndDisplayStats();
     loadRecentEmployees();
     loadDepartmentOverview();
@@ -343,7 +353,7 @@ function editEmployeeFromDashboard(id) {
     console.log('Edit modal opened successfully!');
 }
 
-// Update Employee from Dashboard
+// Update Employee from Dashboard - WITH LOCALSTORAGE
 function updateEmployeeFromDashboard() {
     console.log('Updating employee from dashboard...');
     const form = document.getElementById('editEmployeeForm');
@@ -382,6 +392,9 @@ function updateEmployeeFromDashboard() {
 
     console.log('Employee updated:', employees[index]);
 
+    // SAVE TO LOCALSTORAGE
+    saveToLocalStorage();
+
     // Close modal
     document.getElementById('editEmployeeModal').style.display = 'none';
     
@@ -391,7 +404,7 @@ function updateEmployeeFromDashboard() {
     loadDepartmentOverview();
     
     // Success message
-    alert('✅ Employee updated successfully!');
+    alert('✅ Employee updated successfully and saved!');
 }
 
 // Format Date
@@ -404,4 +417,4 @@ function formatDate(dateString) {
 window.viewEmployeeFromDashboard = viewEmployeeFromDashboard;
 window.editEmployeeFromDashboard = editEmployeeFromDashboard;
 
-console.log('dashboard.js loaded successfully with real data calculations!');
+console.log('dashboard.js loaded successfully with localStorage support!');
