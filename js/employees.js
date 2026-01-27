@@ -1,9 +1,9 @@
 // ==========================================
-// EMPLOYEES.JS - FULLY FIXED VERSION
+// EMPLOYEES.JS - WITH LOCALSTORAGE PERSISTENCE
 // ==========================================
 
-// Sample Employee Data
-let employees = [
+// Initialize employees from localStorage or use default data
+let employees = JSON.parse(localStorage.getItem('companyEmployees')) || [
     {
         id: 'EMP001',
         name: 'John Doe',
@@ -96,9 +96,19 @@ let employees = [
     }
 ];
 
+// Save employees to localStorage
+function saveToLocalStorage() {
+    localStorage.setItem('companyEmployees', JSON.stringify(employees));
+    console.log('Employees saved to localStorage:', employees.length);
+}
+
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Page loaded, initializing...');
+    // If no data in localStorage, save default data
+    if (!localStorage.getItem('companyEmployees')) {
+        saveToLocalStorage();
+    }
     loadEmployees();
     setupEventListeners();
     setupSearch();
@@ -319,7 +329,7 @@ function openAddEmployeeModal() {
     }
 }
 
-// Add Employee - FIXED
+// Add Employee - FIXED WITH LOCALSTORAGE
 function addEmployee() {
     console.log('Adding employee...');
     const form = document.getElementById('addEmployeeForm');
@@ -356,6 +366,9 @@ function addEmployee() {
     employees.push(newEmployee);
     console.log('Employee added:', newEmployee);
 
+    // SAVE TO LOCALSTORAGE
+    saveToLocalStorage();
+
     // Close modal
     document.getElementById('addEmployeeModal').style.display = 'none';
 
@@ -363,7 +376,7 @@ function addEmployee() {
     loadEmployees();
 
     // Success message
-    alert('✅ Employee added successfully!');
+    alert('✅ Employee added successfully and saved!');
     
     // Reset form
     form.reset();
@@ -447,7 +460,7 @@ function editEmployeeDetails(id) {
     console.log('Edit modal opened!');
 }
 
-// Update Employee
+// Update Employee - WITH LOCALSTORAGE
 function updateEmployee() {
     const form = document.getElementById('editEmployeeForm');
     if (!form) return;
@@ -475,16 +488,23 @@ function updateEmployee() {
         education: formData.get('education')
     };
 
+    // SAVE TO LOCALSTORAGE
+    saveToLocalStorage();
+
     document.getElementById('editEmployeeModal').style.display = 'none';
     loadEmployees();
-    alert('✅ Employee updated successfully!');
+    alert('✅ Employee updated successfully and saved!');
 }
 
-// Delete Employee - FIXED
+// Delete Employee - FIXED WITH LOCALSTORAGE
 function deleteEmployeeConfirm(id) {
     console.log('Delete requested for:', id);
     if (confirm('Are you sure you want to delete this employee?')) {
         employees = employees.filter(emp => emp.id !== id);
+        
+        // SAVE TO LOCALSTORAGE
+        saveToLocalStorage();
+        
         loadEmployees();
         alert('✅ Employee deleted successfully!');
     }
@@ -501,4 +521,4 @@ window.viewEmployeeDetails = viewEmployeeDetails;
 window.editEmployeeDetails = editEmployeeDetails;
 window.deleteEmployeeConfirm = deleteEmployeeConfirm;
 
-console.log('employees.js loaded successfully!');
+console.log('employees.js loaded successfully with localStorage!');
