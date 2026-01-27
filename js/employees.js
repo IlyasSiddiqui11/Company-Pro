@@ -1,5 +1,5 @@
 // ==========================================
-// EMPLOYEES.JS - WITH LOCALSTORAGE PERSISTENCE
+// EMPLOYEES.JS - WITH DYNAMIC DEPARTMENTS
 // ==========================================
 
 // Initialize employees from localStorage or use default data
@@ -96,10 +96,59 @@ let employees = JSON.parse(localStorage.getItem('companyEmployees')) || [
     }
 ];
 
+// Load departments from localStorage
+let departments = JSON.parse(localStorage.getItem('companyDepartments')) || [];
+
 // Save employees to localStorage
 function saveToLocalStorage() {
     localStorage.setItem('companyEmployees', JSON.stringify(employees));
     console.log('Employees saved to localStorage:', employees.length);
+}
+
+// Load department names
+function getDepartmentNames() {
+    const depts = JSON.parse(localStorage.getItem('companyDepartments')) || [];
+    return depts.map(d => d.name);
+}
+
+// Populate department dropdowns
+function populateDepartmentDropdowns() {
+    const departmentNames = getDepartmentNames();
+    
+    // Update filter dropdown
+    const filterDropdown = document.getElementById('departmentFilter');
+    if (filterDropdown) {
+        const currentValue = filterDropdown.value;
+        filterDropdown.innerHTML = '<option value="all">All Departments</option>';
+        departmentNames.forEach(dept => {
+            filterDropdown.innerHTML += `<option value="${dept}">${dept}</option>`;
+        });
+        if (currentValue) filterDropdown.value = currentValue;
+    }
+    
+    // Update add employee form dropdown
+    const addFormSelect = document.querySelector('#addEmployeeForm select[name="department"]');
+    if (addFormSelect) {
+        const currentValue = addFormSelect.value;
+        addFormSelect.innerHTML = '<option value="">Select Department</option>';
+        departmentNames.forEach(dept => {
+            addFormSelect.innerHTML += `<option value="${dept}">${dept}</option>`;
+        });
+        if (currentValue) addFormSelect.value = currentValue;
+    }
+    
+    // Update edit employee form dropdown
+    const editFormSelect = document.getElementById('editDepartment');
+    if (editFormSelect) {
+        const currentValue = editFormSelect.value;
+        editFormSelect.innerHTML = '';
+        departmentNames.forEach(dept => {
+            editFormSelect.innerHTML += `<option value="${dept}">${dept}</option>`;
+        });
+        if (currentValue) editFormSelect.value = currentValue;
+    }
+    
+    console.log('Department dropdowns populated with:', departmentNames);
 }
 
 // Initialize when page loads
@@ -109,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!localStorage.getItem('companyEmployees')) {
         saveToLocalStorage();
     }
+    populateDepartmentDropdowns();
     loadEmployees();
     setupEventListeners();
     setupSearch();
@@ -119,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function setupEventListeners() {
     console.log('Setting up event listeners...');
     
-    // Add Employee Button - FIXED
+    // Add Employee Button
     const addBtn = document.getElementById('addEmployeeBtn');
     if (addBtn) {
         console.log('Add button found!');
@@ -128,8 +178,6 @@ function setupEventListeners() {
             console.log('Add button clicked!');
             openAddEmployeeModal();
         });
-    } else {
-        console.error('Add button NOT found!');
     }
 
     // Department Filter
@@ -313,7 +361,7 @@ function updateEmployeeCount() {
     }
 }
 
-// Open Add Employee Modal - FIXED
+// Open Add Employee Modal
 function openAddEmployeeModal() {
     console.log('Opening add employee modal...');
     const modal = document.getElementById('addEmployeeModal');
@@ -322,6 +370,8 @@ function openAddEmployeeModal() {
         if (form) {
             form.reset();
         }
+        // Refresh department dropdown with latest departments
+        populateDepartmentDropdowns();
         modal.style.display = 'block';
         console.log('Modal opened!');
     } else {
@@ -329,7 +379,7 @@ function openAddEmployeeModal() {
     }
 }
 
-// Add Employee - FIXED WITH LOCALSTORAGE
+// Add Employee - WITH LOCALSTORAGE
 function addEmployee() {
     console.log('Adding employee...');
     const form = document.getElementById('addEmployeeForm');
@@ -372,7 +422,8 @@ function addEmployee() {
     // Close modal
     document.getElementById('addEmployeeModal').style.display = 'none';
 
-    // Reload table
+    // Reload table and filters
+    populateDepartmentDropdowns();
     loadEmployees();
 
     // Success message
@@ -392,7 +443,7 @@ function generateEmployeeId() {
     return 'EMP' + String(maxId + 1).padStart(3, '0');
 }
 
-// View Employee Details - FIXED
+// View Employee Details
 function viewEmployeeDetails(id) {
     console.log('Viewing employee:', id);
     const employee = employees.find(emp => emp.id === id);
@@ -426,7 +477,7 @@ function viewEmployeeDetails(id) {
     console.log('View modal opened!');
 }
 
-// Edit Employee - FIXED
+// Edit Employee
 function editEmployeeDetails(id) {
     console.log('Editing employee:', id);
     const employee = employees.find(emp => emp.id === id);
@@ -440,6 +491,9 @@ function editEmployeeDetails(id) {
         console.error('Edit modal not found!');
         return;
     }
+
+    // Refresh department dropdown
+    populateDepartmentDropdowns();
 
     // Populate form
     document.getElementById('editEmployeeId').value = employee.id;
@@ -516,9 +570,11 @@ function formatDate(dateString) {
     return new Date(dateString).toLocaleDateString('en-IN', options);
 }
 
-// Export functions to global scope - FIXED
+// Export functions to global scope
 window.viewEmployeeDetails = viewEmployeeDetails;
 window.editEmployeeDetails = editEmployeeDetails;
 window.deleteEmployeeConfirm = deleteEmployeeConfirm;
 
-console.log('employees.js loaded successfully with localStorage!');
+console.log('employees.js loaded successfully with dynamic departments!');
+
+
