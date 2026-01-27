@@ -75,7 +75,7 @@
 
         <!-- Content -->
         <div class="content-container">
-            <!-- Statistics Cards -->
+            <!-- Statistics Cards - REAL DATA -->
             <div class="stats-grid">
                 <div class="stat-card blue">
                     <div class="stat-icon">
@@ -83,8 +83,8 @@
                     </div>
                     <div class="stat-details">
                         <div class="stat-label">Total Employees</div>
-                        <div class="stat-value">143</div>
-                        <div class="stat-change positive">
+                        <div class="stat-value" id="totalEmployees">0</div>
+                        <div class="stat-change positive" id="employeeChange">
                             <i class="fas fa-arrow-up"></i>
                             <span>12% from last month</span>
                         </div>
@@ -97,7 +97,7 @@
                     </div>
                     <div class="stat-details">
                         <div class="stat-label">Departments</div>
-                        <div class="stat-value">5</div>
+                        <div class="stat-value" id="totalDepartments">0</div>
                         <div class="stat-change neutral">
                             <i class="fas fa-minus"></i>
                             <span>No change</span>
@@ -111,10 +111,10 @@
                     </div>
                     <div class="stat-details">
                         <div class="stat-label">Present Today</div>
-                        <div class="stat-value">128</div>
-                        <div class="stat-change positive">
+                        <div class="stat-value" id="presentToday">0</div>
+                        <div class="stat-change positive" id="attendanceRate">
                             <i class="fas fa-arrow-up"></i>
-                            <span>89.5% attendance</span>
+                            <span>0% attendance</span>
                         </div>
                     </div>
                 </div>
@@ -125,10 +125,10 @@
                     </div>
                     <div class="stat-details">
                         <div class="stat-label">On Leave</div>
-                        <div class="stat-value">15</div>
-                        <div class="stat-change neutral">
+                        <div class="stat-value" id="onLeave">0</div>
+                        <div class="stat-change neutral" id="leavePercentage">
                             <i class="fas fa-minus"></i>
-                            <span>10.5% on leave</span>
+                            <span>0% on leave</span>
                         </div>
                     </div>
                 </div>
@@ -164,7 +164,7 @@
                     </div>
                 </div>
 
-                <!-- Department Overview -->
+                <!-- Department Overview - REAL DATA -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Department Overview</h3>
@@ -172,71 +172,8 @@
                             View All <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
-                    <div class="card-body">
-                        <div class="dept-stat">
-                            <div class="dept-info">
-                                <div class="dept-icon">
-                                    <i class="fas fa-code"></i>
-                                </div>
-                                <div>
-                                    <div class="dept-name">Engineering</div>
-                                    <div class="dept-count">45 employees</div>
-                                </div>
-                            </div>
-                            <div class="dept-number">45</div>
-                        </div>
-
-                        <div class="dept-stat">
-                            <div class="dept-info">
-                                <div class="dept-icon">
-                                    <i class="fas fa-bullhorn"></i>
-                                </div>
-                                <div>
-                                    <div class="dept-name">Marketing</div>
-                                    <div class="dept-count">28 employees</div>
-                                </div>
-                            </div>
-                            <div class="dept-number">28</div>
-                        </div>
-
-                        <div class="dept-stat">
-                            <div class="dept-info">
-                                <div class="dept-icon">
-                                    <i class="fas fa-chart-line"></i>
-                                </div>
-                                <div>
-                                    <div class="dept-name">Sales</div>
-                                    <div class="dept-count">35 employees</div>
-                                </div>
-                            </div>
-                            <div class="dept-number">35</div>
-                        </div>
-
-                        <div class="dept-stat">
-                            <div class="dept-info">
-                                <div class="dept-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <div>
-                                    <div class="dept-name">HR</div>
-                                    <div class="dept-count">15 employees</div>
-                                </div>
-                            </div>
-                            <div class="dept-number">15</div>
-                        </div>
-
-                        <div class="dept-stat">
-                            <div class="dept-info">
-                                <div class="dept-icon">
-                                    <i class="fas fa-dollar-sign"></i>
-                                </div>
-                                <div>
-                                    <div class="dept-name">Finance</div>
-                                    <div class="dept-count">20 employees</div>
-                                </div>
-                            </div>
-                            <div class="dept-number">20</div>
-                        </div>
+                    <div class="card-body" id="departmentOverview">
+                        <!-- Department stats will be inserted here -->
                     </div>
                 </div>
             </div>
