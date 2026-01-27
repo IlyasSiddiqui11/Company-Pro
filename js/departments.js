@@ -149,6 +149,8 @@ function getActiveEmployeesCount(deptName) {
 
 // Load Departments
 function loadDepartments() {
+    // Reload latest employees data
+    employees = JSON.parse(localStorage.getItem('companyEmployees')) || [];
     renderDepartments(departments);
 }
 
@@ -227,7 +229,7 @@ function renderDepartments(deptList) {
     console.log('Departments rendered with employee data!');
 }
 
-// View Department Details - FIXED
+// View Department Details
 function viewDepartmentDetails(id) {
     console.log('Viewing department:', id);
     const dept = departments.find(d => d.id === id);
@@ -318,7 +320,7 @@ function viewDepartmentDetails(id) {
     console.log('View modal opened!');
 }
 
-// Edit Department - FIXED
+// Edit Department
 function editDepartmentDetails(id) {
     console.log('Editing department:', id);
     const dept = departments.find(d => d.id === id);
@@ -368,9 +370,13 @@ function updateDepartment() {
 
     const formData = new FormData(form);
     
+    // Check if name changed
+    const oldName = departments[index].name;
+    const newName = formData.get('name');
+    
     departments[index] = {
         ...departments[index],
-        name: formData.get('name'),
+        name: newName,
         manager: formData.get('manager'),
         managerEmail: formData.get('managerEmail'),
         managerPhone: formData.get('managerPhone'),
@@ -380,6 +386,18 @@ function updateDepartment() {
     };
 
     console.log('Department updated:', departments[index]);
+
+    // If department name changed, update all employees in that department
+    if (oldName !== newName) {
+        employees = JSON.parse(localStorage.getItem('companyEmployees')) || [];
+        employees.forEach(emp => {
+            if (emp.department === oldName) {
+                emp.department = newName;
+            }
+        });
+        localStorage.setItem('companyEmployees', JSON.stringify(employees));
+        console.log('Updated employee departments from', oldName, 'to', newName);
+    }
 
     // SAVE TO LOCALSTORAGE
     saveDepartmentsToLocalStorage();
@@ -429,7 +447,7 @@ function addDepartment() {
     
     document.getElementById('addDepartmentModal').style.display = 'none';
     loadDepartments();
-    alert('✅ Department added successfully and saved!');
+    alert('✅ Department added successfully! It will now appear in all dropdowns.');
     form.reset();
 }
 
@@ -476,4 +494,3 @@ window.editDepartmentDetails = editDepartmentDetails;
 window.deleteDepartmentConfirm = deleteDepartmentConfirm;
 
 console.log('departments.js loaded successfully with localStorage!');
-
