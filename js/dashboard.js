@@ -1,5 +1,5 @@
-// ==========================================
-// DASHBOARD.JS - WITH LOCALSTORAGE SUPPORT
+/// ==========================================
+// DASHBOARD.JS - WITH DYNAMIC DEPARTMENTS
 // ==========================================
 
 // Load employees from localStorage or use default data
@@ -96,9 +96,6 @@ let employees = JSON.parse(localStorage.getItem('companyEmployees')) || [
     }
 ];
 
-// Departments list
-const departments = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance'];
-
 // Save to localStorage
 function saveToLocalStorage() {
     localStorage.setItem('companyEmployees', JSON.stringify(employees));
@@ -121,13 +118,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Calculate and Display Real Statistics
 function calculateAndDisplayStats() {
+    // Reload latest data
+    employees = JSON.parse(localStorage.getItem('companyEmployees')) || [];
+    
     // Total Employees
     const totalEmployees = employees.length;
     document.getElementById('totalEmployees').textContent = totalEmployees;
 
-    // Total Departments
-    const uniqueDepartments = [...new Set(employees.map(emp => emp.department))].length;
-    document.getElementById('totalDepartments').textContent = uniqueDepartments;
+    // Total Departments - from localStorage
+    const departmentsData = JSON.parse(localStorage.getItem('companyDepartments')) || [];
+    document.getElementById('totalDepartments').textContent = departmentsData.length;
 
     // Present Today (Active employees)
     const presentToday = employees.filter(emp => emp.status === 'active').length;
@@ -153,7 +153,7 @@ function calculateAndDisplayStats() {
 
     console.log('Statistics calculated:', {
         totalEmployees,
-        uniqueDepartments,
+        totalDepartments: departmentsData.length,
         presentToday,
         onLeave,
         attendanceRate,
@@ -163,6 +163,10 @@ function calculateAndDisplayStats() {
 
 // Load Department Overview with REAL employee counts
 function loadDepartmentOverview() {
+    // Reload latest data
+    employees = JSON.parse(localStorage.getItem('companyEmployees')) || [];
+    const departmentsData = JSON.parse(localStorage.getItem('companyDepartments')) || [];
+    
     const container = document.getElementById('departmentOverview');
     if (!container) {
         console.error('Department overview container not found!');
@@ -178,14 +182,19 @@ function loadDepartmentOverview() {
     };
 
     // Calculate employee count for each department
-    const departmentStats = departments.map(dept => {
-        const count = employees.filter(emp => emp.department === dept).length;
+    const departmentStats = departmentsData.map(dept => {
+        const count = employees.filter(emp => emp.department === dept.name).length;
         return {
-            name: dept,
+            name: dept.name,
             count: count,
-            icon: departmentIcons[dept] || 'fa-building'
+            icon: departmentIcons[dept.name] || 'fa-building'
         };
     }).filter(dept => dept.count > 0); // Only show departments with employees
+
+    if (departmentStats.length === 0) {
+        container.innerHTML = '<p style="color: #64748b; text-align: center;">No department data available</p>';
+        return;
+    }
 
     container.innerHTML = departmentStats.map(dept => `
         <div class="dept-stat">
@@ -240,6 +249,9 @@ function setupEditForm() {
 
 // Load Recent Employees
 function loadRecentEmployees() {
+    // Reload latest data
+    employees = JSON.parse(localStorage.getItem('companyEmployees')) || [];
+    
     const tbody = document.getElementById('recentEmployeesTable');
     if (!tbody) {
         console.error('Recent employees table not found!');
@@ -334,6 +346,16 @@ function editEmployeeFromDashboard(id) {
         return;
     }
 
+    // Populate department dropdown dynamically
+    const departmentsData = JSON.parse(localStorage.getItem('companyDepartments')) || [];
+    const editDepartmentSelect = document.getElementById('editDepartment');
+    if (editDepartmentSelect) {
+        editDepartmentSelect.innerHTML = '';
+        departmentsData.forEach(dept => {
+            editDepartmentSelect.innerHTML += `<option value="${dept.name}">${dept.name}</option>`;
+        });
+    }
+
     // Populate form with employee data
     document.getElementById('editEmployeeId').value = employee.id;
     document.getElementById('editName').value = employee.name;
@@ -417,4 +439,4 @@ function formatDate(dateString) {
 window.viewEmployeeFromDashboard = viewEmployeeFromDashboard;
 window.editEmployeeFromDashboard = editEmployeeFromDashboard;
 
-console.log('dashboard.js loaded successfully with localStorage support!');
+console.log('dashboard.js loaded successfully with dynamic departments!');
