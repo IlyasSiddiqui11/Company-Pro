@@ -1,124 +1,32 @@
 // ==========================================
-// REPORTS.JS - ALL 4 REPORTS WITH WORD DOWNLOAD
+// REPORTS.JS - WITH LOCALSTORAGE SUPPORT
 // ==========================================
 
-// Employee Data (same as other files)
-const employeesData = [
-    {
-        id: 'EMP001',
-        name: 'John Doe',
-        email: 'john.doe@company.com',
-        phone: '+91 9876543210',
-        department: 'Engineering',
-        position: 'Senior Developer',
-        salary: 85000,
-        joiningDate: '2022-01-15',
-        status: 'active'
-    },
-    {
-        id: 'EMP002',
-        name: 'Jane Smith',
-        email: 'jane.smith@company.com',
-        phone: '+91 9876543220',
-        department: 'Marketing',
-        position: 'Marketing Manager',
-        salary: 75000,
-        joiningDate: '2022-03-20',
-        status: 'active'
-    },
-    {
-        id: 'EMP003',
-        name: 'Mike Johnson',
-        email: 'mike.johnson@company.com',
-        phone: '+91 9876543230',
-        department: 'Sales',
-        position: 'Sales Executive',
-        salary: 65000,
-        joiningDate: '2022-05-10',
-        status: 'active'
-    },
-    {
-        id: 'EMP004',
-        name: 'Sarah Williams',
-        email: 'sarah.williams@company.com',
-        phone: '+91 9876543240',
-        department: 'HR',
-        position: 'HR Specialist',
-        salary: 60000,
-        joiningDate: '2022-07-01',
-        status: 'active'
-    },
-    {
-        id: 'EMP005',
-        name: 'Robert Brown',
-        email: 'robert.brown@company.com',
-        phone: '+91 9876543250',
-        department: 'Finance',
-        position: 'Accountant',
-        salary: 70000,
-        joiningDate: '2021-12-15',
-        status: 'on-leave'
-    },
-    {
-        id: 'EMP006',
-        name: 'Emily Davis',
-        email: 'emily.davis@company.com',
-        phone: '+91 9876543260',
-        department: 'Engineering',
-        position: 'Junior Developer',
-        salary: 55000,
-        joiningDate: '2023-02-01',
-        status: 'active'
-    }
-];
-
-// Department Data
-const departmentsData = [
-    {
-        id: 'DEPT001',
-        name: 'Engineering',
-        manager: 'John Doe',
-        location: 'Building A, Floor 3',
-        budget: 5000000
-    },
-    {
-        id: 'DEPT002',
-        name: 'Marketing',
-        manager: 'Jane Smith',
-        location: 'Building B, Floor 2',
-        budget: 3000000
-    },
-    {
-        id: 'DEPT003',
-        name: 'Sales',
-        manager: 'Mike Johnson',
-        location: 'Building A, Floor 1',
-        budget: 2500000
-    },
-    {
-        id: 'DEPT004',
-        name: 'HR',
-        manager: 'Sarah Williams',
-        location: 'Building B, Floor 1',
-        budget: 1500000
-    },
-    {
-        id: 'DEPT005',
-        name: 'Finance',
-        manager: 'Robert Brown',
-        location: 'Building A, Floor 2',
-        budget: 2000000
-    }
-];
+// Load employees and departments from localStorage
+let employeesData = JSON.parse(localStorage.getItem('companyEmployees')) || [];
+let departmentsData = JSON.parse(localStorage.getItem('companyDepartments')) || [];
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Reports page loaded!');
+    // Reload data from localStorage
+    employeesData = JSON.parse(localStorage.getItem('companyEmployees')) || [];
+    departmentsData = JSON.parse(localStorage.getItem('companyDepartments')) || [];
+    console.log('Loaded employees:', employeesData.length);
+    console.log('Loaded departments:', departmentsData.length);
 });
 
 // 1. EMPLOYEE REPORT - DOWNLOADABLE IN WORD
 function generateEmployeeReport() {
     console.log('Generating Employee Report...');
+    
+    // Reload latest data
+    employeesData = JSON.parse(localStorage.getItem('companyEmployees')) || [];
+    
+    if (employeesData.length === 0) {
+        alert('⚠️ No employee data available to generate report!');
+        return;
+    }
     
     const totalEmployees = employeesData.length;
     const activeEmployees = employeesData.filter(e => e.status === 'active').length;
@@ -207,6 +115,15 @@ function generateEmployeeReport() {
 // 2. DEPARTMENT REPORT - DOWNLOADABLE IN WORD
 function generateDepartmentReport() {
     console.log('Generating Department Report...');
+    
+    // Reload latest data
+    employeesData = JSON.parse(localStorage.getItem('companyEmployees')) || [];
+    departmentsData = JSON.parse(localStorage.getItem('companyDepartments')) || [];
+    
+    if (departmentsData.length === 0) {
+        alert('⚠️ No department data available to generate report!');
+        return;
+    }
     
     // Calculate employee count per department
     const deptStats = departmentsData.map(dept => {
@@ -324,6 +241,14 @@ function generateDepartmentReport() {
 // 3. SALARY REPORT - DOWNLOADABLE IN WORD
 function generateSalaryReport() {
     console.log('Generating Salary Report...');
+    
+    // Reload latest data
+    employeesData = JSON.parse(localStorage.getItem('companyEmployees')) || [];
+    
+    if (employeesData.length === 0) {
+        alert('⚠️ No employee data available to generate report!');
+        return;
+    }
     
     const totalSalary = employeesData.reduce((sum, emp) => sum + emp.salary, 0);
     const avgSalary = totalSalary / employeesData.length;
@@ -450,6 +375,14 @@ function generateSalaryReport() {
 // 4. ATTENDANCE REPORT - DOWNLOADABLE IN WORD
 function generateAttendanceReport() {
     console.log('Generating Attendance Report...');
+    
+    // Reload latest data
+    employeesData = JSON.parse(localStorage.getItem('companyEmployees')) || [];
+    
+    if (employeesData.length === 0) {
+        alert('⚠️ No employee data available to generate report!');
+        return;
+    }
     
     const activeCount = employeesData.filter(e => e.status === 'active').length;
     const leaveCount = employeesData.filter(e => e.status === 'on-leave').length;
@@ -589,4 +522,4 @@ window.generateDepartmentReport = generateDepartmentReport;
 window.generateSalaryReport = generateSalaryReport;
 window.generateAttendanceReport = generateAttendanceReport;
 
-console.log('reports.js loaded successfully - All 4 reports are downloadable!');
+console.log('reports.js loaded successfully with localStorage support!');
