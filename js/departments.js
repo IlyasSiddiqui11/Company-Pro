@@ -1,80 +1,12 @@
 // ==========================================
-// DEPARTMENTS.JS - FULLY FIXED VERSION
-// BASED ON ACTUAL EMPLOYEE DATA
+// DEPARTMENTS.JS - WITH LOCALSTORAGE PERSISTENCE
 // ==========================================
 
-// Employee Data (should match employees.js)
-let employees = [
-    {
-        id: 'EMP001',
-        name: 'John Doe',
-        email: 'john.doe@company.com',
-        phone: '+91 9876543210',
-        department: 'Engineering',
-        position: 'Senior Developer',
-        salary: 85000,
-        joiningDate: '2022-01-15',
-        status: 'active'
-    },
-    {
-        id: 'EMP002',
-        name: 'Jane Smith',
-        email: 'jane.smith@company.com',
-        phone: '+91 9876543220',
-        department: 'Marketing',
-        position: 'Marketing Manager',
-        salary: 75000,
-        joiningDate: '2022-03-20',
-        status: 'active'
-    },
-    {
-        id: 'EMP003',
-        name: 'Mike Johnson',
-        email: 'mike.johnson@company.com',
-        phone: '+91 9876543230',
-        department: 'Sales',
-        position: 'Sales Executive',
-        salary: 65000,
-        joiningDate: '2022-05-10',
-        status: 'active'
-    },
-    {
-        id: 'EMP004',
-        name: 'Sarah Williams',
-        email: 'sarah.williams@company.com',
-        phone: '+91 9876543240',
-        department: 'HR',
-        position: 'HR Specialist',
-        salary: 60000,
-        joiningDate: '2022-07-01',
-        status: 'active'
-    },
-    {
-        id: 'EMP005',
-        name: 'Robert Brown',
-        email: 'robert.brown@company.com',
-        phone: '+91 9876543250',
-        department: 'Finance',
-        position: 'Accountant',
-        salary: 70000,
-        joiningDate: '2021-12-15',
-        status: 'on-leave'
-    },
-    {
-        id: 'EMP006',
-        name: 'Emily Davis',
-        email: 'emily.davis@company.com',
-        phone: '+91 9876543260',
-        department: 'Engineering',
-        position: 'Junior Developer',
-        salary: 55000,
-        joiningDate: '2023-02-01',
-        status: 'active'
-    }
-];
+// Load employees from localStorage
+let employees = JSON.parse(localStorage.getItem('companyEmployees')) || [];
 
-// Department Base Data
-let departments = [
+// Initialize departments from localStorage or use default data
+let departments = JSON.parse(localStorage.getItem('companyDepartments')) || [
     {
         id: 'DEPT001',
         name: 'Engineering',
@@ -127,9 +59,21 @@ let departments = [
     }
 ];
 
+// Save departments to localStorage
+function saveDepartmentsToLocalStorage() {
+    localStorage.setItem('companyDepartments', JSON.stringify(departments));
+    console.log('Departments saved to localStorage:', departments.length);
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Departments page loaded!');
+    // If no data in localStorage, save default data
+    if (!localStorage.getItem('companyDepartments')) {
+        saveDepartmentsToLocalStorage();
+    }
+    // Reload employees from localStorage
+    employees = JSON.parse(localStorage.getItem('companyEmployees')) || [];
     loadDepartments();
     setupEventListeners();
 });
@@ -299,6 +243,9 @@ function viewDepartmentDetails(id) {
         return;
     }
 
+    // Reload employees from localStorage
+    employees = JSON.parse(localStorage.getItem('companyEmployees')) || [];
+
     // Get employees in this department
     const deptEmployees = getEmployeesByDepartment(dept.name);
     const employeeCount = deptEmployees.length;
@@ -401,7 +348,7 @@ function editDepartmentDetails(id) {
     console.log('Edit modal opened!');
 }
 
-// Update Department
+// Update Department - WITH LOCALSTORAGE
 function updateDepartment() {
     console.log('Updating department...');
     const form = document.getElementById('editDepartmentForm');
@@ -434,9 +381,12 @@ function updateDepartment() {
 
     console.log('Department updated:', departments[index]);
 
+    // SAVE TO LOCALSTORAGE
+    saveDepartmentsToLocalStorage();
+
     document.getElementById('editDepartmentModal').style.display = 'none';
     loadDepartments();
-    alert('✅ Department updated successfully!');
+    alert('✅ Department updated successfully and saved!');
 }
 
 // Open Add Department Modal
@@ -449,7 +399,7 @@ function openAddDepartmentModal() {
     }
 }
 
-// Add Department
+// Add Department - WITH LOCALSTORAGE
 function addDepartment() {
     const form = document.getElementById('addDepartmentForm');
     if (!form) return;
@@ -473,9 +423,13 @@ function addDepartment() {
     }
 
     departments.push(newDept);
+    
+    // SAVE TO LOCALSTORAGE
+    saveDepartmentsToLocalStorage();
+    
     document.getElementById('addDepartmentModal').style.display = 'none';
     loadDepartments();
-    alert('✅ Department added successfully!');
+    alert('✅ Department added successfully and saved!');
     form.reset();
 }
 
@@ -489,12 +443,15 @@ function generateDepartmentId() {
     return 'DEPT' + String(maxId + 1).padStart(3, '0');
 }
 
-// Delete Department - FIXED
+// Delete Department - FIXED WITH LOCALSTORAGE
 function deleteDepartmentConfirm(id) {
     console.log('Delete requested for:', id);
     const dept = departments.find(d => d.id === id);
     if (!dept) return;
 
+    // Reload employees from localStorage
+    employees = JSON.parse(localStorage.getItem('companyEmployees')) || [];
+    
     const employeeCount = getEmployeeCount(dept.name);
     
     if (employeeCount > 0) {
@@ -504,6 +461,10 @@ function deleteDepartmentConfirm(id) {
 
     if (confirm('Are you sure you want to delete this department?')) {
         departments = departments.filter(d => d.id !== id);
+        
+        // SAVE TO LOCALSTORAGE
+        saveDepartmentsToLocalStorage();
+        
         loadDepartments();
         alert('✅ Department deleted successfully!');
     }
@@ -514,4 +475,5 @@ window.viewDepartmentDetails = viewDepartmentDetails;
 window.editDepartmentDetails = editDepartmentDetails;
 window.deleteDepartmentConfirm = deleteDepartmentConfirm;
 
-console.log('departments.js loaded successfully!');
+console.log('departments.js loaded successfully with localStorage!');
+
