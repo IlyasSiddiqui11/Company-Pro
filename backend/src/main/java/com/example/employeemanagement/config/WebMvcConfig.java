@@ -11,7 +11,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-                .addResourceLocations("file:./Company-Pro/", "classpath:/static/")
+                .addResourceLocations("file:./frontend/", "file:../frontend/", "file:./Company-Pro/", "classpath:/static/")
                 .setCachePeriod(0); // Disable caching during development
     }
 

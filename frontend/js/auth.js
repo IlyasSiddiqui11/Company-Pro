@@ -2,7 +2,9 @@
 // AUTHENTICATION SYSTEM (Connected to Spring Boot API)
 // ==========================================
 
-window.API_BASE_URL = window.API_BASE_URL || (window.location.origin.includes('8080') ? '' : 'http://localhost:8080');
+// Hosted Render Backend URL
+const BACKEND_URL = 'https://company-pro-backend.onrender.com';
+window.API_BASE_URL = window.API_BASE_URL || BACKEND_URL;
 var API_BASE_URL = window.API_BASE_URL;
 
 // Check if user is already logged in

@@ -181,7 +181,7 @@
         // Fetch user profile from Neon DB via Spring Boot API
         async function loadProfile() {
             try {
-                const response = await fetch(`${window.API_BASE_URL || ''}/api/auth/me`);
+                const response = await fetch(`${window.API_BASE_URL || 'https://company-pro-backend.onrender.com'}/api/auth/me`);
                 if (response.ok) {
                     const user = await response.json();
                     document.getElementById('profileAdminName').textContent = user.name || user.username || 'Admin User';

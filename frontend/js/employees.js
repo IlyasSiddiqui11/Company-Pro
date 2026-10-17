@@ -2,7 +2,9 @@
 // EMPLOYEES.JS - SPRING BOOT REST API BACKEND
 // ==========================================
 
-window.API_BASE_URL = window.API_BASE_URL || (window.location.origin.includes('8080') ? '' : 'http://localhost:8080');
+// Hosted Render Backend URL
+const BACKEND_URL = 'https://company-pro-backend.onrender.com';
+window.API_BASE_URL = window.API_BASE_URL || BACKEND_URL;
 var API_BASE_URL = window.API_BASE_URL;
 
 // In-memory cache of current employee list
@@ -138,7 +140,7 @@ async function loadEmployees() {
                     <td colspan="9" style="text-align: center; padding: 40px;">
                         <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ef4444; margin-bottom: 10px; display: block;"></i>
                         <p style="color: #ef4444; font-weight: 500;">Failed to load employees from backend.</p>
-                        <p style="color: #64748b; font-size: 13px;">Ensure Spring Boot is running at ${API_BASE_URL || 'http://localhost:8080'}</p>
+                        <p style="color: #64748b; font-size: 13px;">Ensure Spring Boot is running at ${API_BASE_URL || 'https://company-pro-backend.onrender.com'}</p>
                     </td>
                 </tr>
             `;
