@@ -3,8 +3,7 @@
 // ==========================================
 
 // Hosted Render Backend URL
-const BACKEND_URL = 'https://company-pro-backend.onrender.com';
-window.API_BASE_URL = window.API_BASE_URL || BACKEND_URL;
+window.API_BASE_URL = window.API_BASE_URL || 'https://company-pro-backend.onrender.com';
 var API_BASE_URL = window.API_BASE_URL;
 
 // In-memory cache of current employee list
@@ -12,12 +11,12 @@ let employees = [];
 let departments = [];
 
 // Initialize when page loads
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', function() {
     console.log('Employees page loaded, initializing with Spring Boot backend...');
-    await populateDepartmentDropdowns();
-    await loadEmployees();
     setupEventListeners();
     setupSearch();
+    populateDepartmentDropdowns();
+    loadEmployees();
 });
 
 // Setup All Event Listeners
@@ -571,6 +570,7 @@ function formatDate(dateString) {
 }
 
 // Export functions to global scope
+window.openAddEmployeeModal = openAddEmployeeModal;
 window.viewEmployeeDetails = viewEmployeeDetails;
 window.editEmployeeDetails = editEmployeeDetails;
 window.deleteEmployeeConfirm = deleteEmployeeConfirm;

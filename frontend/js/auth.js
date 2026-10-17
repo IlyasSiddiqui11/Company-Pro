@@ -3,8 +3,7 @@
 // ==========================================
 
 // Hosted Render Backend URL
-const BACKEND_URL = 'https://company-pro-backend.onrender.com';
-window.API_BASE_URL = window.API_BASE_URL || BACKEND_URL;
+window.API_BASE_URL = window.API_BASE_URL || 'https://company-pro-backend.onrender.com';
 var API_BASE_URL = window.API_BASE_URL;
 
 // Check if user is already logged in

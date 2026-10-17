@@ -3,17 +3,16 @@
 // ==========================================
 
 // Hosted Render Backend URL
-const BACKEND_URL = 'https://company-pro-backend.onrender.com';
-window.API_BASE_URL = window.API_BASE_URL || BACKEND_URL;
+window.API_BASE_URL = window.API_BASE_URL || 'https://company-pro-backend.onrender.com';
 var API_BASE_URL = window.API_BASE_URL;
 
 let departments = [];
 
 // Initialize
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', function() {
     console.log('Departments page loaded, connecting to Spring Boot...');
-    await loadDepartments();
     setupEventListeners();
+    loadDepartments();
 });
 
 // Setup Event Listeners
@@ -432,6 +431,7 @@ async function deleteDepartmentConfirm(id) {
     }
 }
 
+window.openAddDepartmentModal = openAddDepartmentModal;
 window.viewDepartmentDetails = viewDepartmentDetails;
 window.editDepartmentDetails = editDepartmentDetails;
 window.deleteDepartmentConfirm = deleteDepartmentConfirm;
