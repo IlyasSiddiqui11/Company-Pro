@@ -1,9 +1,12 @@
+**/target/
 target/
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
 
-### STS ###
+### IDE Files ###
+.idea/
+*.iws
+*.iml
+*.ipr
 .apt_generated
 .classpath
 .factorypath
@@ -12,25 +15,14 @@ target/
 .springBeans
 .sts4-userId
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
 ### Environment & Secrets (NEVER COMMIT .env) ###
 .env
+**/.env
 *.env.local
 
 ### Local Database Files ###
-/data/
+data/
+**/data/
 *.db
 
 ### Logs & Temp ###
